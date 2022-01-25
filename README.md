@@ -29,7 +29,7 @@ See `requirements.txt` for details.
 
 
 # How to Use
-Once you clone the repo and `cd` into the `random_clone` directory, run the program as follows:
+Once you clone the repo and `cd` into the `random` directory, run the program as follows:
 
 ```
 $ python random.py
