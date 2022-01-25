@@ -3,9 +3,9 @@
 
 Note: /dev/random is different from /dev/urandom in that it implements blocking; in my understanding, blocking means to halt production of output until the CSPRNG has gathered enough new "randomness" to ensure that the output produced is secure.
 
-# About this clone
+# About This Clone
 This clone is an approximation of /dev/random. It is limited. It does not interact with the kernel in any way, but it simulates /dev/random in 3 key ways: 
-1. Has functionality to collect user input, in this case, keyboard input via [sshkeyboard](https://sshkeyboard.readthedocs.io/en/latest/). I chose this library over others because it has no dependencies and doesn't require root access. It uses `fcntl` and `termios` to parse characters from `sys.in`. At this time, the implementation requires the user to do a little bit of manual labor in order to see the output.
+1. Has functionality to collect user input, which in this case, is keyboard input via [sshkeyboard](https://sshkeyboard.readthedocs.io/en/latest/). I chose this library over others for collecting keyboard input because it has no dependencies and doesn't require root access. It uses `fcntl` and `termios` to parse characters from `sys.in`. At this time, the implementation requires the user to do a little bit of manual labor in order to see the output. Given more time, I would have liked to introduce other forms of random user input, such as collecting data from disks, CDs, USBs, or network interfaces. I considered incorporating an OS module to make system calls to interact with the proper linux drivers directly, but this requires further research.
 2. Implements a CSPRNG that uses "user input" to add "randomness" to its entropy pool, and produces a stream of random bytes from it. More info in the outline below.
 3. Implements blocking: after the CSPRNG produces output, it waits until it has added ~16 more bytes of entropy to the pool before producing output again. In general, the CSPRNG prints random output onto the console for every ~16 bytes of random data it reads in.
 
@@ -39,11 +39,14 @@ You will see nothing on the terminal, but the program is running. At this time, 
 
 Repeat this process a few times.
 
-If enough entropy has been gathered while pressing keys, then random output from the CSPRNG's entropy pool will be printed to the console when `enter` is pressed. Otherwise, if no output is printed, this means you are `blocked`, and the program is waiting on more input. (Press more keys!) For this project, the minimum entropy required before running the CSPRNG has been set to 16 bytes so that less manual input is required before seeing the output.
+If enough entropy has been gathered while pressing keys, then random output from the CSPRNG's entropy pool will be printed to the console when `enter` is pressed. Otherwise, if no output is printed, this means the program is `blocked` and is waiting on more input. (Press more keys!)
+
+For this project, the amount of new entropy required before generating output from the CSPRNG has been set to 16 bytes so that less manual input is necessary before seeing the output.
 
 Press `CTRL-C` to exit the program.
 
 [Click here to see an output example.](images/screen-shot-2022-01-25.png)
+
 # Limitations
 Software 
 
